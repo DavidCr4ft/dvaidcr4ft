@@ -1,45 +1,22 @@
-# Importar
-from flask import Flask, render_template
+# Import
+from flask import Flask, render_template,request, redirect
+
 
 
 app = Flask(__name__)
 
-def result_calculate(size, lights, device):
-    # Variables que permiten calcular el consumo energético de los aparatos
-    home_coef = 100
-    light_coef = 0.04
-    devices_coef = 5   
-    return size * home_coef + lights * light_coef + device * devices_coef 
-
-# La primera página
+# Página de contenidos en ejecución
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# La segunda página
-@app.route('/<size>')
-def lights(size):
-    return render_template(
-                            'lights.html', 
-                            size=size
-                           )
 
-# La tercera página
-@app.route('/<size>/<lights>')
-def electronics(size, lights):
-    return render_template(
-                            'electronics.html',
-                            size = size, 
-                            lights = lights                           
-                           )
+# Habilidades dinámicas
+@app.route('/', methods=['POST'])
+def process_form():
+    button_python = request.form.get('button_python')
+    return render_template('index.html', button_python=button_python)
 
-# Cálculo
-@app.route('/<size>/<lights>/<device>')
-def end(size, lights, device):
-    return render_template('end.html', 
-                            result=result_calculate(int(size),
-                                                    int(lights), 
-                                                    int(device)
-                                                    )
-                        )
-app.run(debug=True)
+
+if __name__ == "__main__":
+    app.run(debug=True)
